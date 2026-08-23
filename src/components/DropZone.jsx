@@ -21,7 +21,9 @@ export function DropZone({ onFileSelect, onReject, isProcessing, fileName }) {
   const acceptFile = (file) => {
     if (!file) return;
     if (!hasSpreadsheetExtension(file.name)) {
-      onReject(`“${file.name}” isn’t a spreadsheet. Upload the .xls or .xlsx export from your EMR.`);
+      onReject(
+        `“${file.name}” isn’t a spreadsheet. Upload the .xls or .xlsx daily summary report exported from Greenway.`
+      );
       return;
     }
     onFileSelect(file);
@@ -89,7 +91,7 @@ export function DropZone({ onFileSelect, onReject, isProcessing, fileName }) {
           ? 'Reading your spreadsheet…'
           : isDragging
             ? 'Drop it anywhere in this box'
-            : 'Drop your daily schedule export here'}
+            : 'Drop your Greenway daily summary report here'}
       </h2>
 
       <p className="mx-auto mt-1.5 max-w-sm text-sm text-pretty text-muted-foreground">
@@ -99,7 +101,10 @@ export function DropZone({ onFileSelect, onReject, isProcessing, fileName }) {
             to start over.
           </>
         ) : (
-          <>Excel workbooks only — .xls or .xlsx, straight from your EMR.</>
+          <>
+            Greenway EMR only — the .xls or .xlsx daily summary report, exactly as Greenway exports
+            it.
+          </>
         )}
       </p>
 

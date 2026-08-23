@@ -3,7 +3,7 @@ import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const STEPS = [
-  { id: 'upload', label: 'Upload', hint: 'Daily schedule export' },
+  { id: 'upload', label: 'Upload', hint: 'Greenway daily summary' },
   { id: 'review', label: 'Review', hint: 'Trim the patient list' },
   { id: 'print', label: 'Print', hint: 'Download the PDF' },
 ];

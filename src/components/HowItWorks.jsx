@@ -3,8 +3,8 @@ import { FileSpreadsheet, ListChecks, Printer } from 'lucide-react';
 const CARDS = [
   {
     icon: FileSpreadsheet,
-    title: 'Export the schedule',
-    body: 'Pull the daily summary report out of your EMR as .xls or .xlsx. No template or setup required.',
+    title: 'Export from Greenway',
+    body: 'Run the daily summary report in Greenway EMR and export it as .xls or .xlsx. No template or setup required.',
   },
   {
     icon: ListChecks,

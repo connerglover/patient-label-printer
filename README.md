@@ -1,10 +1,10 @@
 # PatientLabelPrinter
 
-Turn an EMR daily schedule export into a print-ready PDF of patient ID labels — entirely in your browser.
+Turn the **Greenway EMR daily summary report** into a print-ready PDF of patient ID labels — entirely in your browser.
 
-Drop in the day's exported spreadsheet, trim the patient list, and download a PDF sized for your label stock. What used to be manual transcription — one label at a time, per patient, per order — becomes a few seconds of work. For a busy practice, that's hours back every day, with no hand-typed MRNs to get wrong.
+> **Greenway only.** The parser is written against the column layout of Greenway's daily summary report. Exports from other EMRs — and other Greenway reports — will not parse. See [Parsing rules](#parsing-rules) for the exact layout it expects.
 
-Originally built against **Greenway EMR's** daily summary report; any export with the same column layout works.
+Drop in the day's exported report, trim the patient list, and download a PDF sized for your label stock. What used to be manual transcription — one label at a time, per patient, per order — becomes a few seconds of work. For a busy practice, that's hours back every day, with no hand-typed MRNs to get wrong.
 
 ## What's on a label
 
@@ -20,7 +20,7 @@ On stock that is taller than it is wide, text is rotated 90° so it reads along 
 
 ## How it works
 
-1. **Export** the daily summary report from your EMR as `.xls` / `.xlsx`.
+1. **Export** the daily summary report from Greenway EMR as `.xls` / `.xlsx`.
 2. **Upload** it — drag onto the drop zone or browse.
 3. **Review** the parsed list. Filter by name or MRN, and remove anyone who doesn't need labels — individually or in bulk. Patients booked twice in one day are flagged as duplicates. Removals are undoable until you load a different file.
 4. **Configure** the label stock. Pick a preset or set exact dimensions, copies per patient, font, and file name. A to-scale preview updates live.
@@ -40,7 +40,7 @@ Any custom width and height works too.
 
 ### Parsing rules
 
-The parser reads the first worksheet and scans every row, keeping the ones that look like patient entries:
+The parser reads the first worksheet of the Greenway daily summary report and scans every row, keeping the ones that look like patient entries:
 
 | Source | Field |
 | --- | --- |
@@ -73,7 +73,7 @@ Defaults live in [`LabelConfig`](src/utils/pdfGenerator.js); all of them are adj
 
 ## Development
 
-Requires Node.js 20+ (CI and Pages builds pin 22 via [`.node-version`](.node-version)).
+Requires Node.js 20+ (Cloudflare builds pin 22 via [`.node-version`](.node-version)).
 
 ```bash
 npm install
@@ -88,28 +88,29 @@ npm run dev
 | `npm run dev` | Vite dev server with HMR |
 | `npm run build` | Production build to `dist/` |
 | `npm run preview` | Serve the production build via Vite |
-| `npm run preview:cf` | Build, then serve through Cloudflare's local runtime — the only way to exercise `_headers` |
+| `npm run preview:cf` | Build, then serve through Cloudflare's own runtime — the only way to exercise `_headers` |
 | `npm run lint` | ESLint |
-| `npm run deploy` | Build and deploy to Cloudflare Pages with Wrangler |
+| `npm run deploy` | Build and deploy to Cloudflare with Wrangler |
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare
 
-The build is fully static, so Pages serves it directly — no Functions, no Workers, no runtime config.
+The build is fully static, so Cloudflare serves `dist/` directly through **Workers Static Assets** — no Worker script, no Functions, no runtime config. [`wrangler.toml`](wrangler.toml) points at the output directory; `npx wrangler deploy` is all the deploy step needs.
 
-### Option A — connect the Git repo (recommended)
+### Connected to Git (how it deploys today)
 
-In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect to Git**, pick this repository, then set:
+In the Cloudflare dashboard the project is built from this repository with:
 
 | Setting | Value |
 | --- | --- |
-| Framework preset | None (or Vite) |
 | Build command | `npm run build` |
-| Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy` |
 | Root directory | `/` |
 
-Pages reads the Node version from [`.node-version`](.node-version). Every push to `main` publishes; other branches get preview deployments.
+Cloudflare reads the Node version from [`.node-version`](.node-version). Every push to `main` publishes; other branches get preview URLs.
 
-### Option B — deploy from your machine
+> If you ever see **"Missing entry-point to Worker script or to assets directory"**, `wrangler.toml` and the deploy command have drifted apart — `[assets] directory` must be present for `wrangler deploy` to have anything to upload.
+
+### Deploying from your machine
 
 ```bash
 npx wrangler login
@@ -119,15 +120,19 @@ npx wrangler login
 npm run deploy
 ```
 
-[`wrangler.toml`](wrangler.toml) supplies the project name and output directory.
+To exercise the production build through Cloudflare's own runtime — the only way to see `_headers` actually applied:
+
+```bash
+npm run preview:cf
+```
 
 ### Custom domain
 
 Recommended subdomain: **`labels.<yourdomain>`** — short, unambiguous, and it reads naturally next to the product name.
 
-Add it under **Pages project → Custom domains → Set up a custom domain**. If the apex domain is already on Cloudflare, the `CNAME` is created for you; otherwise point `labels` at `<project>.pages.dev`.
+Add it under **the Worker → Settings → Domains & Routes → Add custom domain**. If the apex domain is already on Cloudflare, the DNS record is created for you.
 
-After the domain is live, set `VITE_SITE_URL` so the canonical and Open Graph tags match. Either edit [`.env`](.env) or add a Pages environment variable of the same name — it is read at build time and substituted into `index.html`.
+After the domain is live, set `VITE_SITE_URL` so the canonical and Open Graph tags match. Either edit [`.env`](.env) or add an environment variable of the same name in the dashboard — it is read at build time and substituted into `index.html`.
 
 ### What ships alongside the build
 
@@ -137,7 +142,7 @@ After the domain is live, set `VITE_SITE_URL` so the canonical and Open Graph ta
 | [`public/theme-init.js`](public/theme-init.js) | Applies the saved theme before first paint (a separate file because the CSP forbids inline scripts) |
 | [`public/robots.txt`](public/robots.txt), [`public/site.webmanifest`](public/site.webmanifest) | Crawler and install metadata |
 
-There is no `_redirects` file: the app is a single route, so unknown paths should return a genuine 404 rather than a soft 200.
+There is no `_redirects` file, and `not_found_handling` is set to `"none"`: the app is a single route, so unknown paths return a genuine 404 rather than a soft 200 that would let search engines index every typo'd URL as a copy of the homepage.
 
 ## Project structure
 
@@ -165,7 +170,7 @@ Built with React 19, Vite 7, Tailwind CSS 4 (CSS-first `@theme`), Radix primitiv
 
 ## Troubleshooting
 
-**"No patient rows found"** — the report layout doesn't match the expected columns. Confirm names with bracketed IDs are in column B and DOB is in column D on the *first* worksheet, and that you exported the daily summary report rather than another view.
+**"No patient rows found"** — the layout doesn't match what Greenway's daily summary report produces. Confirm you exported the *daily summary report* from Greenway rather than another view, and that names with bracketed IDs are in column B with DOB in column D on the **first** worksheet. This tool does not read exports from other EMRs.
 
 **Some patients are missing** — open the browser console; skipped rows are logged with the reason. A name missing its `[ID]` bracket or a row shorter than four columns is the usual cause.
 

@@ -1,9 +1,4 @@
-import * as SheetJS from 'xlsx';
-
-// SheetJS's ESM and CJS builds hang their exports off different objects, and
-// only one of them carries SSF. Resolve once so date parsing works in the
-// browser bundle and in Node (tests, scripts) alike.
-const XLSX = SheetJS.SSF ? SheetJS : SheetJS.default;
+import { read, utils, SSF } from 'xlsx';
 
 const EXCLUDED_ENTRIES = ["Surgery, Surgery [37222]"];
 const NAME_REGEX = /^(.+?)\s*\[/;
@@ -50,7 +45,7 @@ export class Patient {
     if (typeof dob === 'number' || isBareSerial) {
       const serial = Number(text);
       try {
-        const date = XLSX.SSF.parse_date_code(serial);
+        const date = SSF.parse_date_code(serial);
         if (date && date.y && date.m && date.d) {
           const month = date.m.toString().padStart(2, '0');
           const day = date.d.toString().padStart(2, '0');
@@ -79,14 +74,14 @@ export class ExcelParser {
   async parseFile() {
     try {
       const arrayBuffer = await this.file.arrayBuffer();
-      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      const workbook = read(arrayBuffer, { type: 'array' });
       
       if (workbook.SheetNames.length === 0) {
         throw new Error("That workbook has no worksheets in it.");
       }
 
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+      const data = utils.sheet_to_json(worksheet, { header: 1, raw: false });
       
       if (data.length === 0) {
         throw new Error("The first worksheet is empty.");
@@ -96,7 +91,7 @@ export class ExcelParser {
       
       if (this.patients.length === 0) {
         throw new Error(
-          "No patient rows found. Confirm this is the daily summary report — names with bracketed IDs belong in column B and dates of birth in column D of the first worksheet."
+          "No patient rows found. This tool reads the Greenway EMR daily summary report only — names with bracketed IDs belong in column B and dates of birth in column D of the first worksheet. Exports from other EMRs, or other Greenway reports, will not parse."
         );
       }
 

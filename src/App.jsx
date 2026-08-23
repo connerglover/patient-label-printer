@@ -3,6 +3,7 @@ import {
   AlertCircle,
   CheckCircle2,
   Download,
+  Info,
   Loader2,
   Lock,
   RotateCcw,
@@ -164,12 +165,21 @@ function App() {
               fileName={fileName}
             />
 
+            <Alert variant="info">
+              <Info />
+              <AlertTitle>Works with Greenway EMR only</AlertTitle>
+              <AlertDescription>
+                The parser is written against the column layout of Greenway’s daily summary report.
+                Exports from other EMRs — and other Greenway reports — won’t be recognised.
+              </AlertDescription>
+            </Alert>
+
             <HowItWorks />
 
             <p className="flex items-start justify-center gap-2 text-center text-xs text-pretty text-muted-foreground">
               <Lock className="mt-px size-3.5 shrink-0" />
               <span>
-                Your spreadsheet is parsed in this browser tab and never uploaded. Closing the tab
+                Your report is parsed in this browser tab and never uploaded. Closing the tab
                 discards it. The PDF you download contains PHI — handle it under your normal
                 safeguards.
               </span>
@@ -246,7 +256,7 @@ function App() {
       </main>
 
       <footer className="mx-auto max-w-7xl px-4 py-8 text-center text-xs text-muted-foreground sm:px-6">
-        PatientLabelPrinter — patient data never leaves your browser.
+        PatientLabelPrinter — built for Greenway EMR. Patient data never leaves your browser.
       </footer>
     </div>
   );

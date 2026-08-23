@@ -14,7 +14,7 @@ export function AppHeader({ theme, onToggleTheme }) {
             PatientLabelPrinter
           </p>
           <p className="hidden truncate text-xs text-muted-foreground sm:block">
-            Schedule export in, print-ready labels out
+            Greenway daily summary in, print-ready labels out
           </p>
         </div>
 

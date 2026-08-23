@@ -1,7 +1,17 @@
-# Cloudflare Pages project configuration.
-# Deploy from a terminal with `npm run deploy`, or connect the GitHub repo in the
-# Cloudflare dashboard and let Pages build on push (settings in README.md).
+# Cloudflare Workers Static Assets configuration.
+#
+# The build pipeline runs `npx wrangler deploy`, which reads this file and
+# uploads `dist/` as a static asset bundle — no Worker script needed, since
+# nothing here runs server-side. Local equivalents: `npm run deploy` to publish,
+# `npm run preview:cf` to serve the build through Cloudflare's own runtime.
 
 name = "patient-label-printer"
 compatibility_date = "2026-08-23"
-pages_build_output_dir = "dist"
+
+[assets]
+directory = "./dist"
+
+# Single route, no client-side router: unknown paths should 404 for real rather
+# than soft-200 to index.html, which would otherwise let search engines index
+# every typo'd URL as a copy of the homepage.
+not_found_handling = "none"
