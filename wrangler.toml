@@ -1,0 +1,7 @@
+# Cloudflare Pages project configuration.
+# Deploy from a terminal with `npm run deploy`, or connect the GitHub repo in the
+# Cloudflare dashboard and let Pages build on push (settings in README.md).
+
+name = "patient-label-printer"
+compatibility_date = "2026-08-23"
+pages_build_output_dir = "dist"

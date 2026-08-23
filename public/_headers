@@ -1,0 +1,20 @@
+# Cloudflare Pages response headers.
+# Order matters: later, more specific rules win over earlier ones.
+
+/*
+  # This app never talks to a server, so lock the page down to itself.
+  # Google Fonts is the one external origin we allow.
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# Vite emits content-hashed filenames, so these can be cached forever.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The shell must always be revalidated or users get a stale build.
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
