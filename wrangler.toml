@@ -5,7 +5,7 @@
 # nothing here runs server-side. Local equivalents: `npm run deploy` to publish,
 # `npm run preview:cf` to serve the build through Cloudflare's own runtime.
 
-name = "patient-label-printer"
+name = "greenway-label-printer"
 compatibility_date = "2026-08-23"
 
 [assets]

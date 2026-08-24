@@ -83,7 +83,7 @@ export class PDFGenerator {
 
     pdf.setProperties({
       title: normalizeFilename(this.config.filename).replace(/\.pdf$/i, ''),
-      creator: 'PatientLabelPrinter',
+      creator: 'Greenway Label Printer',
     });
 
     return pdf;

@@ -1,6 +1,6 @@
 {
-  "name": "PatientLabelPrinter",
-  "short_name": "Labels",
+  "name": "Greenway Label Printer",
+  "short_name": "Greenway Labels",
   "description": "Turn the Greenway EMR daily summary report into a print-ready PDF of patient ID labels. Greenway only.",
   "start_url": "/",
   "display": "standalone",

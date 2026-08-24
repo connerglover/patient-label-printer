@@ -256,7 +256,10 @@ function App() {
       </main>
 
       <footer className="mx-auto max-w-7xl px-4 py-8 text-center text-xs text-muted-foreground sm:px-6">
-        PatientLabelPrinter — built for Greenway EMR. Patient data never leaves your browser.
+        <p>Greenway Label Printer — patient data never leaves your browser.</p>
+        <p className="mt-1">
+          Not affiliated with or endorsed by Greenway Health, LLC. “Greenway” is their trademark.
+        </p>
       </footer>
     </div>
   );

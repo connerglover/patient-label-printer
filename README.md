@@ -1,4 +1,4 @@
-# PatientLabelPrinter
+# Greenway Label Printer
 
 Turn the **Greenway EMR daily summary report** into a print-ready PDF of patient ID labels — entirely in your browser.
 
@@ -177,3 +177,7 @@ Built with React 19, Vite 7, Tailwind CSS 4 (CSS-first `@theme`), Radix primitiv
 **Labels print off-center or clipped** — match width and height to your stock exactly, and print at 100% scale with page scaling off. If text still crowds the edges, raise the margin under **Typography & spacing**.
 
 **Text is smaller than the size I set** — that's the auto-fit shrinking a long name to keep it on the label. Widen the stock or shorten the margin to get the requested size back.
+
+---
+
+*Greenway Label Printer is an independent tool and is not affiliated with, authorised by, or endorsed by Greenway Health, LLC. "Greenway" is a trademark of its respective owner and is used here only to describe the report format this tool reads.*

@@ -11,7 +11,7 @@ export function AppHeader({ theme, onToggleTheme }) {
 
         <div className="min-w-0">
           <p className="truncate text-[15px] leading-tight font-semibold tracking-tight">
-            PatientLabelPrinter
+            Greenway Label Printer
           </p>
           <p className="hidden truncate text-xs text-muted-foreground sm:block">
             Greenway daily summary in, print-ready labels out

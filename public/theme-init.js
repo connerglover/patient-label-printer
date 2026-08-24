@@ -3,7 +3,7 @@
 // public/_headers disallows inline scripts.
 (function () {
   try {
-    var stored = localStorage.getItem('plp-theme');
+    var stored = localStorage.getItem('glp-theme');
     var dark =
       stored === 'dark' ||
       (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
